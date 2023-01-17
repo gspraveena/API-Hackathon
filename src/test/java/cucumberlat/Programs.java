@@ -13,6 +13,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+//import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
 public class Programs {
 
@@ -24,7 +25,10 @@ public class Programs {
 	String programId1, programId2, programId3, batchId1, batchId2;
 	String programName1, programName2, programName3, batchName1, batchName2;
 	int randomInt;
-
+	String monthName;
+	int day;
+	
+ 
 	Date date = new Date();
 	Timestamp timestamp2 = new Timestamp(date.getTime());
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
@@ -62,6 +66,7 @@ public class Programs {
 		programName1 = js.getString("programName");
 		System.out.println("programId : " + programId1);
 		System.out.println("programName : " + programName1);
+		
 
 	}
 
@@ -73,13 +78,20 @@ public class Programs {
 		System.out.print("\n**************** CREATING FIRST PROGRAM *********************\n");
 
 		System.out.print(" Response--> \n " + response.getBody().asPrettyString());
+		
+		System.out.print(" \n Validations :\n " );
+		System.out.println("Time taken to run in ms: " +response.getTime());
+		System.out.println(" status code : "+response.getStatusCode());
+		System.out.println(" status line : "+ response.statusLine());
+		System.out.println(" content type : "+response.getHeader("content-type"));
 
 		Assert.assertEquals(response.statusCode(), 201);
 
 		System.out.println("\n Status code is: " + response.statusCode());
 
 		Assert.assertEquals(response.jsonPath().getString("programName"), request1.get("programName"));
-
+		
+		
 	}
 
 // <--create second program-->
@@ -122,6 +134,11 @@ public class Programs {
 		System.out.print("\n**************** CREATING SECOND PROGRAM *********************\n");
 
 		System.out.print("  Response--> \n " + response2.getBody().asPrettyString());
+		System.out.print(" \n Validations :\n " );
+		System.out.println("Time taken to run in ms: " +response2.getTime());
+		System.out.println(" status code : "+response2.getStatusCode());
+		System.out.println(" status line : "+ response2.statusLine());
+		System.out.println(" content type : "+response2.getHeader("content-type"));
 
 		Assert.assertEquals(response2.statusCode(), 201);
 
@@ -167,6 +184,11 @@ public class Programs {
 		System.out.print("\n**************** CREATING THIRD PROGRAM *********************\n");
 
 		System.out.print("  Response--> \n " + response12.getBody().asPrettyString());
+		System.out.print(" \n Validations :\n " );
+		System.out.println("Time taken to run in ms: " +response12.getTime());
+		System.out.println(" status code : "+response12.getStatusCode());
+		System.out.println(" status line : "+ response12.statusLine());
+		System.out.println(" content type : "+response12.getHeader("content-type"));
 
 		Assert.assertEquals(response12.statusCode(), 201);
 
@@ -325,6 +347,11 @@ public class Programs {
 		System.out.print("\n**************** CREATING FIRST BATCH *********************\n");
 
 		System.out.println(" Response--> \n" + response3.getBody().asPrettyString());
+		System.out.print(" \n Validations :\n " );
+		System.out.println("Time taken to run in ms: " +response3.getTime());
+		System.out.println(" status code : "+response3.getStatusCode());
+		System.out.println(" status line : "+ response3.statusLine());
+		System.out.println(" content type : "+response3.getHeader("content-type"));
 
 		Assert.assertEquals(response3.statusCode(), 201);
 
@@ -373,6 +400,12 @@ public class Programs {
 		System.out.print("\n**************** CREATING SECOND BATCH *********************\n");
 
 		System.out.println(" Response--> \n" + response4.getBody().asPrettyString());
+		
+		System.out.print(" \n Validations :\n " );
+		System.out.println("Time taken to run in ms: " +response4.getTime());
+		System.out.println(" status code : "+response4.getStatusCode());
+		System.out.println(" status line : "+ response4.statusLine());
+		System.out.println(" content type : "+response4.getHeader("content-type"));
 
 		Assert.assertEquals(response4.statusCode(), 201);
 
@@ -464,4 +497,16 @@ public class Programs {
 		System.out.println("\n Status code is:" + Update_response3.statusCode());
 		System.out.print("Batch is deleted successfully");
 	}
+
+//@When("User make a GET request with batch name to Validate JSON against Schema")
+//public void user_make_a_get_request_with_batch_name_to_validate_json_against_schema()
+//{
+//	RestAssured.baseURI = base_URI;
+//    given()
+//     .get("/batches/batchName/Tue Jan 17 12:12:52 CST 2023-Ninjasurvivors-SDET-SDET94-PG-Batch01")
+//    .then()
+//     .assertThat()
+//     .body(matchesJsonSchemaInClasspath("schema.json"))        
+//     .statusCode(200);
+//}
 }

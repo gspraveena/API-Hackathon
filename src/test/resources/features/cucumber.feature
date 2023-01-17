@@ -69,3 +69,5 @@ Feature: verify  post,get, update in the API
     #@DeleteBatchById
     When User make a DELETE request with an end point "/batches/(BatchId)"
     Then User gets status code "200" batch will be deleted
+    #@JsonSchemaValidator
+    #When User make a GET request with batch name to Validate JSON against Schema
