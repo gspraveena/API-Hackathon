@@ -1,14 +1,11 @@
 package cucumberlat;
 
 import static io.restassured.RestAssured.given;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.json.simple.JSONObject;
 import org.testng.Assert;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -19,12 +16,13 @@ import io.restassured.response.Response;
 
 public class Programs {
 
-	Response response1, response2, Update_response1, Update_response2, response3, response4, Update_response3;
-	JSONObject request1, request2, request3, request4;
+	Response response1, response2, response12, Update_response1, Update_response2, response3, response4,
+			Update_response3;
+	JSONObject request1, request2, request3, request4, request12;
 	String base_URI = "https://lms-backend-service.herokuapp.com/lms";
 
-	String programId1, programId2, batchId1, batchId2;
-	String programName1, programName2, batchName1, batchName2;
+	String programId1, programId2, programId3, batchId1, batchId2;
+	String programName1, programName2, programName3, batchName1, batchName2;
 	int randomInt;
 
 	Date date = new Date();
@@ -131,6 +129,51 @@ public class Programs {
 		Assert.assertEquals(response2.jsonPath().getString("programName"), request2.get("programName"));
 
 	}
+//	<--create 3rd Program-->
+
+	@Given("user create 3rd program with given base url")
+	public void user_create_3rd_program_with_given_base_url() {
+
+		RestAssured.baseURI = base_URI;
+		request12 = new JSONObject();
+
+		request12.put("programName", date + "-NinjaSurvivors3-SDET-094-" + randomInt);
+		request12.put("programDescription", "API-Hackathon-AutomationTesting");
+		request12.put("programStatus", "Active");
+		request12.put("creationTime", dtString);
+		request12.put("lastModTime", dtString);
+
+		System.out.println(request12.toJSONString());
+		RestAssured.requestSpecification = given().header("Content-Type", "application/json")
+				.contentType(ContentType.JSON).accept(ContentType.JSON).body(request12.toJSONString());
+	}
+
+	@When("user make a post request for 3rd program with end point {string}")
+	public void user_make_a_post_request_for_3rd_program_with_end_point(String string) {
+
+		response12 = RestAssured.requestSpecification.when().post("/saveprogram").then().extract().response();
+		String responseBody = response12.getBody().asString();
+
+		JsonPath js = new JsonPath(responseBody);
+		programId3 = js.getString("programId");
+		programName3 = js.getString("programName");
+		System.out.println("programId : " + programId3);
+		System.out.println("programName : " + programName3);
+	}
+
+	@Then("user get response body and get {int} as status code")
+	public void user_get_response_body_and_get_as_status_code(Integer int1) {
+
+		System.out.print("\n**************** CREATING THIRD PROGRAM *********************\n");
+
+		System.out.print("  Response--> \n " + response12.getBody().asPrettyString());
+
+		Assert.assertEquals(response12.statusCode(), 201);
+
+		System.out.println("\n Status code is: " + response12.statusCode());
+
+		Assert.assertEquals(response12.jsonPath().getString("programName"), request12.get("programName"));
+	}
 
 //	  <--GetProgramById-->
 
@@ -154,7 +197,7 @@ public class Programs {
 
 		System.out.println("\n Status code is:" + response1.statusCode());
 
-		System.out.print("\n**************** GETTING SECOND PROGRAM BY PROGRAM ID *********************\n");
+		System.out.print("\n**************** GETTING SECOND PROGRAM BY PROGRAM NAME *********************\n");
 
 		System.out.print("  Response--> \n " + response2.getBody().asPrettyString());
 
@@ -182,7 +225,7 @@ public class Programs {
 	@Then("User should get status code as {string} and updated response body")
 	public void user_should_get_status_code_as_and_updated_response_body(String string) {
 
-		System.out.print("\n**************** UPDATING PROGRAM BY PROGRAM ID *********************\n");
+		System.out.print("\n**************** UPDATING FIRST PROGRAM BY PROGRAM ID *********************\n");
 
 		System.out.print("  Response--> \n" + Update_response1.getBody().asPrettyString());
 
@@ -211,7 +254,7 @@ public class Programs {
 	@Then("User get status code as {string} and updated response body")
 	public void user_get_status_code_as_and_updated_response(String string) {
 
-		System.out.print("\n**************** UPDATING PROGRAM BY PROGRAM NAME *********************\n");
+		System.out.print("\n**************** UPDATING SECOND PROGRAM BY PROGRAM NAME *********************\n");
 
 		System.out.print(" Response--> \n " + Update_response2.getBody().asPrettyString());
 
@@ -221,6 +264,25 @@ public class Programs {
 
 	}
 
+//	<--delete program by program ID-->
+
+	@When("User make a DELETE request with an endpoint {string}")
+	public void user_make_a_delete_request_with_an_endpoint(String string) {
+
+		RestAssured.baseURI = base_URI;
+		response12 = RestAssured.requestSpecification.when().delete("/deletebyprogid/" + programId3).then().extract()
+				.response();
+
+	}
+
+	@Then("User gets status code and program will be deleted")
+	public void user_gets_status_code_and_program_will_be_deleted() {
+
+		System.out.print("\n *********** Deleting Third Program with programId3 ************");
+		Assert.assertEquals(response12.statusCode(), 200);
+		System.out.println("\n Status code is:" + response12.statusCode());
+		System.out.print("Third Program is deleted successfully \n");
+	}
 	// <== create first Batch ==>
 
 	@Given("User create 1st batch with base Url")
@@ -397,6 +459,7 @@ public class Programs {
 	@Then("User gets status code {string} batch will be deleted")
 	public void user_gets_status_code_batch_will_be_deleted(String string) {
 
+		System.out.print("\n********** Deleting First Batch with batchId *************");
 		Assert.assertEquals(Update_response3.statusCode(), 200);
 		System.out.println("\n Status code is:" + Update_response3.statusCode());
 		System.out.print("Batch is deleted successfully");

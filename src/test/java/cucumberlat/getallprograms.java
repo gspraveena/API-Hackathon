@@ -1,19 +1,12 @@
 package cucumberlat;
 
 import static io.restassured.RestAssured.given;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.json.simple.JSONObject;
 import org.testng.Assert;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
 public class getallprograms {

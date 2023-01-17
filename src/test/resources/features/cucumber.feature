@@ -35,6 +35,11 @@ Feature: verify  post,get, update in the API
     Given user create 2nd program with base url and request body
     When user make a post request for 2nd program with end point "saveprogram"
     Then user get response body 201
+    #create 3rd program
+    Given user create 3rd program with given base url
+    When user make a post request for 3rd program with end point "saveprogram"
+    Then user get response body and get 201 as status code
+   
     #getprogrambyProgramId
     When user make a get request with an end point "/programs/programId"
     Then user should get status code as "200" and responsebody
@@ -44,6 +49,9 @@ Feature: verify  post,get, update in the API
     #@updateById
     When User make a PUT request to update program by using programId(Modify 2nd program)
     Then User get status code as "200" and updated response body
+    #@deleteProgramByProgramId
+    When User make a DELETE request with an endpoint "/deletebyprogid/(programId)"
+    Then User gets status code and program will be deleted
     #@create_1st_Batch
     Given User create 1st batch with base Url
     When User make a POST request  for batch with end point "batches"

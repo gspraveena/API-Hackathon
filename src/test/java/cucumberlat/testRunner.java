@@ -10,8 +10,7 @@ import io.cucumber.junit.CucumberOptions;
 		features = "src/test/resources/Features/cucumber.feature", glue = "cucumberlat", plugin = {
 				"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:", "pretty",
 				"html:target/cucumber-reports/cucumber.html",
-				"json:target/cucumber-reports/cucumber.json" }, 
-		monochrome = true
+				"json:target/cucumber-reports/cucumber.json" }, monochrome = true
 
 )
 
