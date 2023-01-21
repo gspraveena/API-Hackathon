@@ -1,0 +1,818 @@
+{
+	"info": {
+		"_postman_id": "ee3426b8-61c5-4297-be01-48ce96df0416",
+		"name": "LMS_API_SDET94-PG",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25189632"
+	},
+	"item": [
+		{
+			"name": "Programs",
+			"item": [
+				{
+					"name": "GetAllPrograms",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"   ",
+									"});",
+									"",
+									"const response=pm.response.json();",
+									"console.log(response.status);",
+									"console.log(response[0].programId);",
+									"",
+									"tests[\"validating response body\"]= responseBody.has(\"programName\");",
+									"tests[\"validating response body\"]= responseBody.has(\"programDescription\");",
+									"",
+									"value=response[0].programId",
+									"console.log(value)",
+									"",
+									"//verify content type header is present or not",
+									"pm.test(\"verify content-Type header present\",function(){",
+									"pm.response.to .have.header(\"Content-Type\");",
+									"})",
+									"pm.test(\"verify status of the program\",function(){",
+									"pm.expect(response[0].programStatus).to.eql(\"Active\");",
+									"})",
+									" ",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/allPrograms",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"allPrograms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "saveProgram",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');",
+									"",
+									"pm.environment.set('currentdateTime', moment().subtract(6,'hour').format());",
+									" "
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"    pm.globals.set(\"progId\", pm.response.json().programId);",
+									"   pm.globals.set(\"name\",pm.response.json().programName);",
+									"});",
+									"const response=pm.response.json();",
+									" console.log(response.status);",
+									"",
+									" pm.test(\"verify content-Type header present\",function(){",
+									"        pm.response.to .have.header(\"Content-Type\");",
+									"})",
+									"",
+									" ",
+									" ",
+									"tests[\"validating response body\"]= responseBody.has(\"programName\");",
+									"tests[\"validating response body\"]= responseBody.has(\"programDescription\");",
+									"  tests[\"validating response body\"]= responseBody.has(\"Active\");",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n       \"programId\":{{$randomInt}},\n       \"programName\": \"{{$randomDomainName}}\",\n       \"programDescription\": \"API Automation Testing\",\n        \"programStatus\": \"Active\",\n        \"creationTime\": \"{{currentdateTime}}\",\n        \"lastModTime\": \"{{currentdateTime}}\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/saveprogram",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"saveprogram"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetaSinlgeProgram",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    ",
+									"});",
+									"const response=pm.response.json();",
+									" console.log(response.status);",
+									"// console.log(response[0].programName);",
+									"",
+									"//verify content type header is present or not",
+									"pm.test(\"verify content-Type header present\",function(){",
+									"        pm.response.to .have.header(\"Content-Type\");",
+									"})",
+									"",
+									"//Handling response that dont Parse",
+									"pm.test(\"Body contains some string\",function(){",
+									"    pm.expect(pm.response.text()).to.include(\"Active\")",
+									"})",
+									"",
+									"tests[\"validation status code\"]= responseCode.code == 200;",
+									"tests[\"validating response body\"]= responseBody.has(\"programName\");",
+									"tests[\"validating response body\"]= responseBody.has(\"programDescription\");",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/programs/{{progId}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"programs",
+								"{{progId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateprogrambyID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    var jsonData = pm.response.json();",
+									"    //pm.globals.set(\"Id\", jsonData.programId);",
+									"",
+									"    //pm.globals.set(\"name\",pm.response.json().programName);",
+									"});",
+									"",
+									"//verify content type header is present or not",
+									"pm.test(\"verify content-Type header present\",function(){",
+									"        pm.response.to .have.header(\"Content-Type\");",
+									"})",
+									"",
+									"//Handling response that dont Parse",
+									"pm.test(\"Body contains some string\",function(){",
+									"    pm.expect(pm.response.text()).to.include(\"Active\")",
+									"})",
+									"",
+									"tests[\"validation status code\"]= responseCode.code == 200;",
+									"tests[\"validating response body\"]= responseBody.has(\"programName\");",
+									"tests[\"validating response body\"]= responseBody.has(\"programDescription\");",
+									"",
+									" "
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');",
+									"",
+									"pm.environment.set('currentdateTime', moment().subtract(6,'hour').format());",
+									"",
+									" ",
+									"",
+									" "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \n    \"programName\": \"{{name}}\",\n    \"programDescription\": \"{{$randomDomainName}}\",\n    \"programStatus\": \"Active\",\n    \"creationTime\": \"{{currentdateTime}}\",\n    \"lastModTime\": \"{{currentdateTime}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/putprogram/{{progId}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"putprogram",
+								"{{progId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateprogrambyName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    var jsonData= pm.response.json();",
+									"    pm.globals.set(\"name\", jsonData.programName);",
+									"});",
+									"//verify content type header is present or not",
+									"pm.test(\"verify content-Type header present\",function(){",
+									"        pm.response.to .have.header(\"Content-Type\");",
+									"})",
+									"",
+									"//Handling response that dont Parse",
+									"pm.test(\"Body contains some string\",function(){",
+									"    pm.expect(pm.response.text()).to.include(\"Active\")",
+									"})",
+									"",
+									"tests[\"validation status code\"]= responseCode.code == 200;",
+									"tests[\"validating response body\"]= responseBody.has(\"programName\");",
+									"tests[\"validating response body\"]= responseBody.has(\"programDescription\");",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');",
+									"",
+									"pm.environment.set('currentdateTime', moment().subtract(6,'hour').format());",
+									"",
+									" "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"programId\": \"{{progId}}\",\n    \"programName\":\"{{name}}\",\n    \"programDescription\": \"Selenium Training\",\n    \"programStatus\": \"Active\",\n    \"creationTime\": \"{{currentdateTime}}\",\n    \"lastModTime\": \"{{currentdateTime}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/program/{{name}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"program",
+								"{{name}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteprogbyName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									" ",
+									"tests[\"validation status code\"]= responseCode.code == 200;",
+									" "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/deletebyprogname/{{name}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"deletebyprogname",
+								"{{name}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Batches",
+			"item": [
+				{
+					"name": "saveProgram",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');",
+									"",
+									"pm.environment.set('currentdateTime', moment().subtract(6,'hour').format());",
+									" "
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"",
+									"    pm.globals.set(\"progId\", pm.response.json().programId);",
+									"   pm.globals.set(\"name\",pm.response.json().programName);",
+									"});",
+									"const response=pm.response.json();",
+									" console.log(response.status);",
+									"",
+									" pm.test(\"verify content-Type header present\",function(){",
+									"        pm.response.to .have.header(\"Content-Type\");",
+									"})",
+									"",
+									" ",
+									" ",
+									"tests[\"validating response body\"]= responseBody.has(\"programName\");",
+									"tests[\"validating response body\"]= responseBody.has(\"programDescription\");",
+									"tests[\"validating response body\"]= responseBody.has(\"programDescription\");",
+									" tests[\"validating response body\"]= responseBody.has(\"Active\");",
+									"",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n       \"programId\":{{$randomInt}},\n       \"programName\": \"pg{{$randomDomainName}}\",\n       \"programDescription\": \"API Automation Testing\",\n        \"programStatus\": \"Active\",\n        \"creationTime\": \"{{currentdateTime}}\",\n        \"lastModTime\": \"{{currentdateTime}}\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/saveprogram",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"saveprogram"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllBatches",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    ",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/batches",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"batches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "saveBatch",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									" "
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"",
+									"    pm.globals.set(\"batchId\", pm.response.json().batchId);",
+									"   pm.globals.set(\"batchName\",pm.response.json().batchName);",
+									"   ",
+									"});",
+									" ",
+									"  const response=pm.response.json();",
+									" console.log(response.status);",
+									"",
+									" pm.test(\"verify content-Type header present\",function(){",
+									"        pm.response.to .have.header(\"Content-Type\");",
+									"})",
+									"",
+									" ",
+									" ",
+									"tests[\"validating response body\"]= responseBody.has(\"batchName\");",
+									"tests[\"validating response body\"]= responseBody.has(\"batchDescription\");",
+									"tests[\"validating response body\"]= responseBody.has(\"Active\");",
+									" tests[\"validating response body\"]= responseBody.has(\"batchNoOfClasses\");",
+									"",
+									"",
+									"   ",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"batchName\": \"{{$randomAdjective}}\",\n\"batchDescription\": \"Selenium Training\",\n\"batchStatus\": \"Active\",\n\"batchNoOfClasses\": \"{{$randomInt}}\",\n\"programId\": \"{{progId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/batches",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"batches"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBatchbybatchId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    ",
+									"});",
+									"pm.test(\"verify content-Type header present\",function(){",
+									"        pm.response.to .have.header(\"Content-Type\");",
+									"})",
+									"",
+									"//Handling response that dont Parse",
+									"pm.test(\"Body contains some string\",function(){",
+									"    pm.expect(pm.response.text()).to.include(\"Active\")",
+									"})",
+									"",
+									"tests[\"validation status code\"]= responseCode.code == 200;",
+									"tests[\"validating response body\"]= responseBody.has(\"batchName\");",
+									"tests[\"validating response body\"]= responseBody.has(\"batchDescription\");",
+									"tests[\"validating response body\"]= responseBody.has(\"Active\");",
+									" tests[\"validating response body\"]= responseBody.has(\"batchNoOfClasses\");",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/batches/batchId/{{batchId}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"batches",
+								"batchId",
+								"{{batchId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBatchbybatchName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    ",
+									"});",
+									"pm.test(\"verify content-Type header present\",function(){",
+									"        pm.response.to .have.header(\"Content-Type\");",
+									"})",
+									"",
+									"//Handling response that dont Parse",
+									"pm.test(\"Body contains some string\",function(){",
+									"    pm.expect(pm.response.text()).to.include(\"Active\")",
+									"})",
+									"",
+									"tests[\"validation status code\"]= responseCode.code == 200;",
+									"tests[\"validating response body\"]= responseBody.has(\"batchName\");",
+									"tests[\"validating response body\"]= responseBody.has(\"batchDescription\");",
+									"tests[\"validating response body\"]= responseBody.has(\"Active\");",
+									" tests[\"validating response body\"]= responseBody.has(\"batchNoOfClasses\");",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/batches/batchName/{{batchName}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"batches",
+								"batchName",
+								"{{batchName}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBatchbyprogramId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    ",
+									"});",
+									"pm.test(\"verify content-Type header present\",function(){",
+									"        pm.response.to .have.header(\"Content-Type\");",
+									"})",
+									"",
+									"//Handling response that dont Parse",
+									"pm.test(\"Body contains some string\",function(){",
+									"    pm.expect(pm.response.text()).to.include(\"Active\")",
+									"})",
+									"",
+									"tests[\"validation status code\"]= responseCode.code == 200;",
+									"tests[\"validating response body\"]= responseBody.has(\"batchName\");",
+									"tests[\"validating response body\"]= responseBody.has(\"batchDescription\");",
+									"tests[\"validating response body\"]= responseBody.has(\"Active\");",
+									" tests[\"validating response body\"]= responseBody.has(\"batchNoOfClasses\");",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/batches/program/{{progId}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"batches",
+								"program",
+								"{{progId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBatchById",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"",
+									"    var jsonData = pm.response.json();",
+									"    pm.globals.set(\"Id\", jsonData.batchId);",
+									"",
+									"    //pm.globals.set(\"name\",pm.response.json().programName);",
+									"});",
+									"",
+									"pm.test(\"verify content-Type header present\",function(){",
+									"        pm.response.to .have.header(\"Content-Type\");",
+									"})",
+									"",
+									"//Handling response that dont Parse",
+									"pm.test(\"Body contains some string\",function(){",
+									"    pm.expect(pm.response.text()).to.include(\"Active\")",
+									"})",
+									"",
+									"tests[\"validation status code\"]= responseCode.code == 200;",
+									"tests[\"validating response body\"]= responseBody.has(\"batchName\");",
+									"tests[\"validating response body\"]= responseBody.has(\"batchDescription\");",
+									"tests[\"validating response body\"]= responseBody.has(\"Active\");",
+									" tests[\"validating response body\"]= responseBody.has(\"batchNoOfClasses\");",
+									"",
+									" "
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"  ",
+									"",
+									" "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\n \n    \"batchName\": \"{{batchName}}\",\n    \"batchDescription\": \"{{$randomJobDescriptor}}\",\n    \"batchStatus\": \"Active\",\n    \"batchNoOfClasses\": 536,\n    \"programId\": {{progId}},\n    \"programName\": \"adam\"\n}\n ",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/batches/{{batchId}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"batches",
+								"{{batchId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteBatchbyBatchId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"tests[\"validation status code\"]= responseCode.code == 200;",
+									" "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/batches/{{batchId}}",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"batches",
+								"{{batchId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
